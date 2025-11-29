@@ -35,7 +35,7 @@ runtime:
   env:
     - "DEBUG=true"
   http_key: "defaulthttpkey"
-  js_entrypoint: "index.js"
+  js_entrypoint: "tictactoe.js"
   js_min_stack_size: 1048576
   js_max_stack_size: 8388608
   js_call_stack_size: 1024
