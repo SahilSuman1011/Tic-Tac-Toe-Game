@@ -1,0 +1,72 @@
+name: tictactoe-server
+data_dir: "./data/"
+
+logger:
+  stdout: true
+  level: "info"
+  file: ""
+
+console:
+  port: 7351
+  username: "admin"
+  password: "password"
+  signing_key: "defaultkey"
+  token_expiry_sec: 86400
+
+socket:
+  server_key: "defaultkey"
+  port: 7350
+  max_message_size_bytes: 4096
+  read_buffer_size_bytes: 4096
+  write_buffer_size_bytes: 4096
+  ping_period_ms: 15000
+  pong_wait_ms: 25000
+  write_wait_ms: 10000
+  outgoing_queue_size: 64
+
+database:
+  address:
+    - "postgres:localdb@postgres:5432/nakama"
+  conn_max_lifetime_ms: 0
+  max_open_conns: 100
+  max_idle_conns: 25
+
+runtime:
+  env:
+    - "DEBUG=true"
+  http_key: "defaulthttpkey"
+  js_entrypoint: "index.js"
+  js_min_stack_size: 1048576
+  js_max_stack_size: 8388608
+  js_call_stack_size: 1024
+  js_registry_size: 524288
+  js_global_object_size: 131072
+
+match:
+  input_queue_size: 128
+  call_queue_size: 128
+  join_attempt_queue_size: 128
+  join_marker_deadline_ms: 15000
+  max_empty_sec: 60
+  deferred_message_fn: ""
+
+tracker:
+  event_queue_size: 512
+
+session:
+  token_expiry_sec: 86400
+  refresh_token_expiry_sec: 604800
+  encryption_key: "defaultencryptionkey"
+  single_socket: false
+  single_match: false
+  single_party: false
+
+matchmaker:
+  max_tickets: 1000
+  interval_sec: 5
+  max_intervals: 10
+  min_count: 2
+  max_count: 2
+  query: "+properties.mode:classic"
+  revthreshold: 10
+  revprecision: 10
