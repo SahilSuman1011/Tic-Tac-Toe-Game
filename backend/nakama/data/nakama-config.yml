@@ -23,6 +23,9 @@ socket:
   pong_wait_ms: 25000
   write_wait_ms: 10000
   outgoing_queue_size: 64
+  allowed_origins:
+    - "http://localhost:5173"
+    - "http://localhost:3000"
 
 database:
   address:

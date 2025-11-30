@@ -22,6 +22,30 @@ const rpcCreateMatch: nkruntime.RpcFunction = function(ctx: nkruntime.Context, l
   return JSON.stringify({ matchId });
 };
 
+const rpcFindMatch: nkruntime.RpcFunction = function(ctx: nkruntime.Context, logger: nkruntime.Logger, nk: nkruntime.Nakama, payload: string): string {
+  // Search for existing matches with open slots (0 or 1 player)
+  const maxMatches = 10;
+  const minPlayers = 0;
+  const maxPlayers = 1; // Look for matches with 0-1 players (open for joining)
+  const label = JSON.stringify({ mode: 'classic', open: true });
+  
+  logger.info(`Searching for matches with label: ${label}`);
+  const matches = nk.matchList(maxMatches, true, label, minPlayers, maxPlayers, null);
+  logger.info(`Found ${matches ? matches.length : 0} matches`);
+  
+  if (matches && matches.length > 0) {
+    // Found an open match - return the first one
+    logger.info(`Joining existing match: ${matches[0].matchId} with ${matches[0].size} players`);
+    return JSON.stringify({ matchId: matches[0].matchId });
+  }
+  
+  // No open matches - create a new one
+  logger.info('No open matches found, creating new match');
+  const matchId = nk.matchCreate(moduleName, {});
+  logger.info(`Created new match: ${matchId}`);
+  return JSON.stringify({ matchId });
+};
+
 const matchInit: nkruntime.MatchInitFunction<MatchState> = function(ctx: nkruntime.Context, logger: nkruntime.Logger, nk: nkruntime.Nakama, params: {[key: string]: string}): { state: MatchState; tickRate: number; label: string } {
   const state: MatchState = {
     gameState: {
@@ -292,6 +316,7 @@ const rpcGetLeaderboard: nkruntime.RpcFunction = function(ctx: nkruntime.Context
 function InitModule(ctx: nkruntime.Context, logger: nkruntime.Logger, nk: nkruntime.Nakama, initializer: nkruntime.Initializer) {
   // Register RPCs
   initializer.registerRpc("create_match", rpcCreateMatch);
+  initializer.registerRpc("find_match", rpcFindMatch);
   initializer.registerRpc("get_leaderboard", rpcGetLeaderboard);
   
   // Register match handler
